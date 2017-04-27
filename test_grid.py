@@ -26,23 +26,23 @@ def test_get_next_pos_direction():
 		assert c == dict[direction]
 
 def test_search_vertical():
-	assert grid.search('aei')
-	assert grid.search('iea')
+	assert grid.search('aei')['success']
+	assert grid.search('iea')['success']
 
 def test_search_horizontal():
-	assert grid.search('abcd')
-	assert grid.search('dcba')
+	assert grid.search('abcd')['success']
+	assert grid.search('dcba')['success']
 
 def test_search_diagonal_down():
-	assert grid.search('afk')
-	assert grid.search('kfa')
+	assert grid.search('afk')['success']
+	assert grid.search('kfa')['success']
 
 def test_search_diagonal_up():
-	assert grid.search('ifc')
-	assert grid.search('cfi')
+	assert grid.search('ifc')['success']
+	assert grid.search('cfi')['success']
 
 def test_search_false():
-	assert grid.search('afkl') == False
+	assert grid.search('afkl')['success'] == False
 
 def test_invalid_args():
 	with pytest.raises(ValueError):

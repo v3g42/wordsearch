@@ -35,7 +35,7 @@ class Grid:
 				self.letter_index[random_letter].append(p)
 
 
-	def get_next_pos(self, word, pos, direction, x, y):
+	def get_next_pos(self, word, pos=0, direction=0, x=0, y=0):
 		"""
 		Calculates the next position based on direction parameter
 		(0: vertical, 1: horizontal, 2: diagonal down, 3: diagonal up)
@@ -54,37 +54,41 @@ class Grid:
 			y = y - increment
 		return x,y
 
-	def _search_in_direction(self, word, direction, pos=1, x=0, y=0):
+	def _search_in_direction(self, word, pos, direction, x, y):
 		"""
 		Recursively checks for word traversing in four possible directions
 		"""
-
 		# Comptes the next position
 		x, y = self.get_next_pos(word, pos, direction, x, y)
 
 		# Returns False if out of bounds
-		if x < 0  or x >= self.wid or y<0  or y >= self.hgt: return False
+		if x < 0 or x >= self.wid or y<0  or y >= self.hgt:
+			return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': direction}
 
 		# Returns False if positional alphabet doesn't match
-		if word[pos] != self.data[y*self.wid + x]: return False
-
+		if word[pos] != self.data[y*self.wid + x]:
+			return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': direction}
 		# If all alphabets match return True
-		if pos == len(word)-1: return True
+		if pos == len(word)-1:
+			return {'success':True, 'pos': pos, 'x': x, 'y': y, 'direction': direction}
 
-		return self._search_in_direction(word, direction, pos+1, x, y)
+		return self._search_in_direction(word, pos+1, direction, x, y)
 
 
-	def search(self, word):
+	def search(self, word, pos=0, direction=0, x=0, y=0):
 		"""
 		searches the grid for a specific word in a DFS fashion
 		"""
-
-		arr = self.letter_index[word[0]]
-		if len(arr)==0: return False
-		for coord in arr:
-			y, x = divmod(coord, self.wid)
-			for direction in range(8):
-				if self._search_in_direction(word, direction, 1, x, y):
-					return True
-		return False
+		if pos == 0:
+			arr = self.letter_index[word[0]]
+			if len(arr)==0: return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': -1}
+			for coord in arr:
+				y, x = divmod(coord, self.wid)
+				for direction in range(8):
+					result = self._search_in_direction(word, 1, direction, x, y)
+					if result['success']:
+						return result
+			return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': -1}
+		else:
+			return self._search_in_direction(word, pos, direction, x, y)
 
