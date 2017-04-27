@@ -10,6 +10,7 @@ class Grid:
 		self.wid = wid
 		self.hgt = hgt
 		self.data = [None] * (wid * hgt)
+		self.letter_index = {l: [] for l in string.lowercase}
 		self.fill()
 
 
@@ -24,11 +25,58 @@ class Grid:
 		return '\n'.join(result)
 
 	"""
-	fills the grid with random letters
+	fills the grid with random letters and stores
 	"""
 	def fill(self):
 		for p in xrange(self.wid * self.hgt):
-				self.data[p] = random.choice(string.lowercase)
+				random_letter = random.choice(string.lowercase)
+				self.data[p] = random_letter
+				self.letter_index[random_letter].append(p)
+
+
+	def _get_next_pos(self, word, pos, direction, x, y):
+		dimension, increment = divmod(direction, 4)
+		increment  = -1 if increment > 4 else 1
+		if dimension == 0:
+			y = y + 1
+		elif dimension == 1:
+			x = x + 1
+		elif dimension == 2:
+			x = x + 1
+			y = y + 1
+		elif dimension == 3:
+			x = x + 1
+			y = y - 1
+		return x,y
+
+	def _search_in_direction(self, word, direction, pos=0, x=0, y=0):
+
+		# Initalize coordinates and call search
+		if pos == 0:
+			arr = self.letter_index[word[0]]
+			if len(arr)==0: return False
+
+			for coord in arr:
+		  		y, x = divmod(coord, self.wid)
+		  		if self._search_in_direction(word, direction, pos+1, x, y): return True
+		  	return False
+		else:
+			x, y = self._get_next_pos(word, pos, direction, x, y)
+			if x < 0  or x >= self.wid or y<0  or y >= self.hgt: return False
+			if word[pos] != self.data[y*self.wid + x]: return False
+			if pos == len(word)-1: return True
+			return self._search_in_direction(word, direction, pos+1, x, y)
+
+
+	"""
+	searches the grid for a specific word in a DFS fashion
+	"""
+	def search(self, word):
+		exists = False
+		for direction in xrange(8):
+			if self._search_in_direction(word, direction) or  self._search_in_direction(word[::-1], direction):
+				return True
+		return False
 
 	"""
 	returns all valid combinations in the grid.
