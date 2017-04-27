@@ -2,6 +2,11 @@
 
 Implementation of word search using a dictionary
 
+### Prerequisites
+
+- Python 3
+- Pytest
+
 ### Implementation
 
 - grid.py  Grid class implementing a word grid
@@ -21,5 +26,9 @@ Help
 ./wordsearch.py -h
 ```
 
+### Running unit tests
+```
+pytest
+```
 
 

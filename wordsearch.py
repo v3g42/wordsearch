@@ -1,7 +1,13 @@
 #!/usr/bin/env python
 import time
 import argparse
+import multiprocessing
+
+#from multiprocessing.dummy import Pool as ThreadPool
 from grid import Grid
+
+#pool = ThreadPool(multiprocessing.cpu_count())
+#results = pool.map(my_function, my_array)
 
 """
 defines argument parser to take dimensions of the grid
@@ -22,19 +28,21 @@ def get_user_input():
 if __name__ == '__main__':
 	curtime = time.time()
 	x, y = get_user_input()
-	words = [word.strip('\n') for word in open('./words.txt')]
-	grid = Grid(x, y)
 
+	grid = Grid(x, y)
 	# prints the grid to console.
 	print('##### Word Grid #####')
 	print(grid.to_text())
 
 	print('##### Words #####')
-	for word in words:
+	results = []
+	for word in open('./words.txt'):
+		word = word.strip('\n')
 		if grid.search(word):
-			print(word)
+			results.append(word)
 
 	print("Performed in {0} seconds".format(time.time() - curtime))
+	print(results)
 
 
 
