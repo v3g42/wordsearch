@@ -3,6 +3,20 @@ import string
 import os
 
 class Grid:
+	"""
+	This class creates a m*n grid filled with randomised characters.
+	Exposes few methods
+	- search(word, options)
+	 Checks and returns  the positional object of a word in the grid.s
+
+	- search_in_dictionary(words)
+	Checks against all the words in the dictionary to find valid words
+
+	- get_next_pos(options)
+	Calculates the next position in a word traversal based on current position
+	and direction.
+
+	"""
 
 	# Constant controlling the prefix rolling while searching in dictionary
 	MIN_PREFIX_LENGTH = 2
