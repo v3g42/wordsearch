@@ -18,10 +18,22 @@ Grid is initialized with a [wid*hgt] array.  `grid.fill()` initializes the grid 
 `letter_index` dictionary stores occurence of every letter in the grid for fast access of first letter.
 From a starting point  is performed in all valid directions to see if it matches with the word.
 
+```
+Exposes few methods
+	- search(word, options)
+	 Checks and returns  the positional object of a word in the grid.s
+
+	- search_in_dictionary(words)
+	Checks against all the words in the dictionary to find valid words
+
+	- get_next_pos(options)
+	Calculates the next position in a word traversal based on current position
+	and direction.
+```
+
 *wordsearch.py*
 
-Combines multiple words with a common prefix and checks if prefix is present and thereafter searches for individual words.
-
+Takes user input, initialises a word grid and retrieves all valid words
 
 ### Running the application
 To create a 15*15 grid
