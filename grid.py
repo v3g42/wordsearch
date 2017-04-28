@@ -1,7 +1,11 @@
 import random
 import string
+import os
 
 class Grid:
+
+	# Constant controlling the prefix rolling while searching in dictionary
+	MIN_PREFIX_LENGTH = 2
 
 	def __init__(self, wid, hgt):
 		"""
@@ -101,3 +105,47 @@ class Grid:
 			return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': -1}
 		else:
 			return self._search_in_direction(word, options)
+
+
+	def _search_in_list(self, words, options = {'pos': 0, 'direction':0, 'x': 0, 'y': 0}):
+		"""
+		searches every word in the list and returns
+		the words present. Takes 2 parameters list of words
+		and prefix options which sets the starting point and direction
+		"""
+		results = []
+		for word in words:
+			#print(word, pos, x, y)
+			result = self.search(word, options)
+			if result['success']:
+				results.append(word)
+		return results
+
+
+	def search_in_dictionary(self, words):
+		"""
+		maintains a rolling prefix till the length becomes less than THRESHOLD
+		and calls grid search only if prefix is present
+		"""
+		results = []
+		sub_list = list()
+		prefix = None
+		for word in words:
+			word = word.strip('\n')
+			# Check the prefix of sublist so far
+			new_prefix = os.path.commonprefix([prefix, word]) if prefix else word
+			# if new_prefix length is less than threshold call gridsearch on prefix
+			# and if present check for individual strings in sublist
+			if len(new_prefix) <= self.MIN_PREFIX_LENGTH:
+				prefix_result = self.search(prefix)
+				if prefix_result['success'] is True:
+					if prefix in sub_list: results.append(prefix)
+					prefix_optons = {'pos': prefix_result['pos'], 'direction': prefix_result['direction'], 'x': prefix_result['x'], 'y': prefix_result['y']}
+					results = results + self._search_in_list(sub_list, prefix_optons)
+				prefix = word
+				sub_list = [word]
+			else:
+				prefix = new_prefix
+				sub_list.append(word)
+		results = results + self._search_in_list(sub_list)
+		return set(results)

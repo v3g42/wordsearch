@@ -8,6 +8,9 @@ import pytest
 with mock.patch('random.choice', side_effect=list(string.ascii_lowercase[0:12])):
 	"""
 	Initialises the first 9 alphabets as the grid
+	a b c d
+	e f g h
+	i j k l
 	"""
 	grid =  Grid(4,3)
 
@@ -15,13 +18,10 @@ def test_get_next_pos_direction():
 	"""
 	Should return the correct directional characters
 	considering the grid starting from center
-	a b c d
-	e f g h
-	i j k l
 	"""
 	dict = {0: 'j', 1: 'g', 2: 'k', 3: 'c'}
 	for direction in range(4):
-		x, y = grid.get_next_pos('fat', {'pos': 1, 'direction': direction, 'x': 1, 'y': 1} )
+		x, y = grid.get_next_pos('fat', {'pos': 1, 'direction': direction, 'x': 1, 'y': 1})
 		c = grid.data[grid.wid * y + x]
 		assert c == dict[direction]
 
@@ -47,3 +47,9 @@ def test_search_false():
 def test_invalid_args():
 	with pytest.raises(ValueError):
 		grid = Grid(0,0)
+
+def test_search_in_dictionary_full_strings():
+	words = ['aei', 'abcd', 'afk', 'ifc']
+	results = grid.search_in_dictionary(words)
+
+	assert len(set(words).intersection(set(results))) == 4
