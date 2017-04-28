@@ -51,5 +51,9 @@ def test_invalid_args():
 def test_search_in_dictionary_full_strings():
 	words = ['aei', 'abcd', 'afk', 'ifc']
 	results = grid.search_in_dictionary(words)
+	assert len(set(words).intersection(set(results))) == 4
 
+def test_search_in_dictionary_partial_strings():
+	words = ['ae', 'bc', 'fk', 'cf']
+	results = grid.search_in_dictionary(words)
 	assert len(set(words).intersection(set(results))) == 4

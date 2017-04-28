@@ -137,15 +137,20 @@ class Grid:
 			# if new_prefix length is less than threshold call gridsearch on prefix
 			# and if present check for individual strings in sublist
 			if len(new_prefix) <= self.MIN_PREFIX_LENGTH:
-				prefix_result = self.search(prefix)
-				if prefix_result['success'] is True:
-					if prefix in sub_list: results.append(prefix)
-					prefix_optons = {'pos': prefix_result['pos'], 'direction': prefix_result['direction'], 'x': prefix_result['x'], 'y': prefix_result['y']}
-					results = results + self._search_in_list(sub_list, prefix_optons)
-				prefix = word
-				sub_list = [word]
+				if not prefix:
+					if self.search(word):
+						results.append(word)
+				else:
+					prefix_result = self.search(prefix)
+					if prefix_result['success'] is True:
+						if prefix in sub_list: results.append(prefix)
+						prefix_optons = {'pos': prefix_result['pos'], 'direction': prefix_result['direction'], 'x': prefix_result['x'], 'y': prefix_result['y']}
+						results = results + self._search_in_list(sub_list, prefix_optons)
+					prefix = word
+					sub_list = [word]
 			else:
 				prefix = new_prefix
 				sub_list.append(word)
-		results = results + self._search_in_list(sub_list)
+		if len(sub_list)>0:
+			results = results + self._search_in_list(sub_list)
 		return set(results)
