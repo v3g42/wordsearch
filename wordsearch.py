@@ -6,6 +6,7 @@ import os
 from grid import Grid
 
 MIN_PREFIX_LENGTH = 2
+
 def get_user_input():
 	"""
 	defines argument parser to take dimensions of the grid
@@ -41,7 +42,6 @@ def process_words(words):
 	maintains a rolling prefix till the length becomes less than THRESHOLD
 	and calls grid search only if prefix is present
 	"""
-
 	results = []
 	sub_list = list()
 	prefix = None
@@ -65,10 +65,11 @@ def process_words(words):
 	return results
 
 if __name__ == '__main__':
+
 	curtime = time.time()
 	x, y = get_user_input()
-
 	grid = Grid(x, y)
+
 	# prints the grid to console.
 	print('##### Word Grid #####')
 	print(grid.to_text())
@@ -78,7 +79,3 @@ if __name__ == '__main__':
 	print(results)
 
 	print("Performed in {0} seconds".format(time.time() - curtime))
-
-
-
-

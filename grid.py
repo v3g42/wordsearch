@@ -64,7 +64,6 @@ class Grid:
 		Recursively checks for word traversing in four possible directions.
 		Takes paramter word and options for starting point
 		"""
-
 		pos = options['pos']
 		direction = options['direction']
 
@@ -78,13 +77,12 @@ class Grid:
 		# Returns False if positional alphabet doesn't match
 		if word[pos] != self.data[y*self.wid + x]:
 			return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': direction}
+
 		# If all alphabets match return True
 		if pos == len(word)-1:
 			return {'success':True, 'pos': pos, 'x': x, 'y': y, 'direction': direction}
 
-
 		return self._search_in_direction(word, {'pos': pos+1, 'direction':direction, 'x': x, 'y': y})
-
 
 	def search(self, word, options={'pos': 0, 'direction':0, 'x': 0, 'y': 0}):
 		"""
@@ -103,4 +101,3 @@ class Grid:
 			return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': -1}
 		else:
 			return self._search_in_direction(word, options)
-
