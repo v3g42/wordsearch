@@ -21,7 +21,7 @@ def test_get_next_pos_direction():
 	"""
 	dict = {0: 'j', 1: 'g', 2: 'k', 3: 'c'}
 	for direction in range(4):
-		x, y = grid.get_next_pos('fat', 1, direction, 1, 1)
+		x, y = grid.get_next_pos('fat', {'pos': 1, 'direction': direction, 'x': 1, 'y': 1} )
 		c = grid.data[grid.wid * y + x]
 		assert c == dict[direction]
 

@@ -13,7 +13,7 @@ class Grid:
 		self.hgt = hgt
 		self.data = [None] * (wid * hgt)
 		self.letter_index = {l: [] for l in string.ascii_lowercase}
-		self.fill()
+		self._fill()
 
 	def to_text(self):
 		"""
@@ -25,9 +25,10 @@ class Grid:
 
 		return '\n'.join(result)
 
-	def fill(self):
+	def _fill(self):
 		"""
 		Fills the grid with random letters and stores
+		index of all stored alphabets
 		"""
 		for p in range(self.wid * self.hgt):
 				random_letter = random.choice(string.ascii_lowercase)
@@ -35,11 +36,15 @@ class Grid:
 				self.letter_index[random_letter].append(p)
 
 
-	def get_next_pos(self, word, pos=0, direction=0, x=0, y=0):
+	def get_next_pos(self, word, options={'pos': 0, 'direction':0, 'x': 0, 'y': 0}):
 		"""
 		Calculates the next position based on direction parameter
 		(0: vertical, 1: horizontal, 2: diagonal down, 3: diagonal up)
 		"""
+		pos = options['pos']
+		x = options['x']
+		y = options['y']
+		direction = options['direction']
 		increment, dimension  = divmod(direction, 4)
 		increment  = -1 if increment > 0 else 1
 		if dimension == 0:
@@ -54,12 +59,17 @@ class Grid:
 			y = y - increment
 		return x,y
 
-	def _search_in_direction(self, word, pos, direction, x, y):
+	def _search_in_direction(self, word, options={'pos': 0, 'direction':0, 'x': 0, 'y': 0}):
 		"""
-		Recursively checks for word traversing in four possible directions
+		Recursively checks for word traversing in four possible directions.
+		Takes paramter word and options for starting point
 		"""
+
+		pos = options['pos']
+		direction = options['direction']
+
 		# Comptes the next position
-		x, y = self.get_next_pos(word, pos, direction, x, y)
+		x, y = self.get_next_pos(word, options)
 
 		# Returns False if out of bounds
 		if x < 0 or x >= self.wid or y<0  or y >= self.hgt:
@@ -72,23 +82,25 @@ class Grid:
 		if pos == len(word)-1:
 			return {'success':True, 'pos': pos, 'x': x, 'y': y, 'direction': direction}
 
-		return self._search_in_direction(word, pos+1, direction, x, y)
+
+		return self._search_in_direction(word, {'pos': pos+1, 'direction':direction, 'x': x, 'y': y})
 
 
-	def search(self, word, pos=0, direction=0, x=0, y=0):
+	def search(self, word, options={'pos': 0, 'direction':0, 'x': 0, 'y': 0}):
 		"""
 		searches the grid for a specific word in a DFS fashion
 		"""
+		pos = options['pos']
 		if pos == 0:
 			arr = self.letter_index[word[0]]
 			if len(arr)==0: return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': -1}
 			for coord in arr:
 				y, x = divmod(coord, self.wid)
 				for direction in range(8):
-					result = self._search_in_direction(word, 1, direction, x, y)
+					result = self._search_in_direction(word, {'pos': 1, 'direction':direction, 'x': x, 'y': y})
 					if result['success']:
 						return result
 			return {'success':False, 'pos': -1, 'x': -1, 'y': -1, 'direction': -1}
 		else:
-			return self._search_in_direction(word, pos, direction, x, y)
+			return self._search_in_direction(word, options)
 
